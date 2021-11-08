@@ -583,6 +583,7 @@ dependencies = [
  "env_logger",
  "log",
  "openssl",
+ "serde",
  "sqlx",
 ]
 
