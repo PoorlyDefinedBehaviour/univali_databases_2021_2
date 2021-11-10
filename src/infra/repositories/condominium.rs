@@ -99,4 +99,50 @@ impl contract::repositories::CondominiumRepository for CondominiumRepository {
 
     Ok(condominium)
   }
+
+  async fn update(
+    &self,
+    condominium_id: i32,
+    data: dto::condominium::Create,
+  ) -> Result<Condominium> {
+    let mut tx = self.pool.begin().await?;
+
+    sqlx::query!(
+      r#"
+      UPDATE tab_address
+      SET 
+        street = ?,
+        number = ?,
+        city_id = ?
+      WHERE id = ?
+      "#,
+      data.address.street,
+      data.address.number,
+      data.address.city_id,
+      condominium_id,
+    )
+    .execute(&mut tx)
+    .await?;
+
+    sqlx::query!(
+      r#"
+      UPDATE tab_condominium
+      SET 
+        name = ?,
+        cnpj = ?
+      WHERE id = ?
+      "#,
+      data.name,
+      data.cnpj,
+      condominium_id
+    )
+    .execute(&mut tx)
+    .await?;
+
+    tx.commit().await?;
+
+    let condominium = self.get_by_id(condominium_id).await?.unwrap();
+
+    Ok(condominium)
+  }
 }

@@ -81,3 +81,5 @@ impl Into<dto::condominium::Create> for Create {
     }
   }
 }
+
+pub type Update = Create;

@@ -9,3 +9,5 @@ pub struct Address {
   pub number: String,
   pub city_id: i32,
 }
+
+pub type Update = Create;

@@ -34,3 +34,11 @@ pub async fn create(
 ) -> Result<Condominium> {
   db.condominium.create(data).await
 }
+
+pub async fn update(
+  db: &contract::repositories::Database,
+  condominium_id: i32,
+  data: dto::condominium::Update,
+) -> Result<Condominium> {
+  db.condominium.update(condominium_id, data).await
+}
