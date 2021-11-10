@@ -38,3 +38,9 @@ sqlx migrate run
 ```console
 RUST_LOG=databases_1_m3_1=trace HOST=127.0.0.1 PORT=8080 cargo run
 ```
+
+## Accessing the database inside Docker
+
+```
+docker exec -it db_sol_nascente mysql -uroot -pmysql
+```
