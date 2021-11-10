@@ -3,7 +3,7 @@ use anyhow::Result;
 use async_trait::async_trait;
 
 pub struct Database {
-  pub condominium: dyn CondominiumRepository,
+  pub condominium: Box<dyn CondominiumRepository>,
 }
 
 #[async_trait]

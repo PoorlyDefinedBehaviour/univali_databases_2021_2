@@ -8,7 +8,7 @@ pub fn init(config: &mut web::ServiceConfig) {
 
 #[post("/condominiums")]
 async fn create(
-  db: web::Data<Box<contract::repositories::Database>>,
+  db: web::Data<contract::repositories::Database>,
   data: web::Json<viewmodel::condominium::Create>,
 ) -> impl Responder {
   let db = db.get_ref();

@@ -1,7 +1,8 @@
 #[macro_use]
 extern crate log;
 
-use actix_web::{middleware, App, HttpServer};
+use crate::infra::repositories;
+use actix_web::{middleware, web::Data, App, HttpServer};
 use dotenv::dotenv;
 use sqlx::mysql::MySqlPoolOptions;
 use std::env;
@@ -18,9 +19,10 @@ async fn main() -> std::io::Result<()> {
 
   let database_url = env::var("DATABASE_URL").unwrap();
 
-  info!("connecting to database at {}", &database_url);
+  info!("connecting to database");
 
   let db_pool = MySqlPoolOptions::new()
+    .max_connections(10)
     .connect(&database_url)
     .await
     .unwrap();
@@ -32,7 +34,7 @@ async fn main() -> std::io::Result<()> {
 
   HttpServer::new(move || {
     App::new()
-      .data(db_pool.clone())
+      .app_data(Data::new(repositories::new(db_pool.clone())))
       .wrap(middleware::Logger::default())
       .configure(routes::condominium::init)
   })

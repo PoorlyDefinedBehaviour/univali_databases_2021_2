@@ -3,8 +3,8 @@ use anyhow::Result;
 use async_trait::async_trait;
 use sqlx::{mysql::MySql, Pool};
 
-pub struct CondominiumRepository {
-  pool: Pool<MySql>,
+pub(super) struct CondominiumRepository {
+  pub pool: Pool<MySql>,
 }
 
 impl CondominiumRepository {

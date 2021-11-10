@@ -54,14 +54,14 @@ impl From<condominiums::Condominium> for Condominium {
   }
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct CreateCondominiumAddress {
   pub street: String,
   pub number: String,
   pub city_id: i32,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Create {
   pub name: String,
   pub cnpj: String,
