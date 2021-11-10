@@ -1,6 +1,7 @@
 version: "3"
 services:
   db:
+    container_name: "db_sol_nascente"
     restart: always
     image: mysql
     environment:
