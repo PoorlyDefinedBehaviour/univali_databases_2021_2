@@ -1,9 +1,13 @@
 use crate::domain::{condominiums, condominiums::contract};
 use crate::routes::viewmodel;
-use actix_web::{get, patch, post, web, HttpResponse, Responder};
+use actix_web::{delete, get, patch, post, web, HttpResponse, Responder};
 
 pub fn init(config: &mut web::ServiceConfig) {
-  config.service(get_all).service(create).service(update);
+  config
+    .service(get_all)
+    .service(create)
+    .service(update)
+    .service(delete);
 }
 
 #[get("/condominiums")]
@@ -60,5 +64,21 @@ async fn update(
     Ok(condominium) => {
       HttpResponse::Ok().json(viewmodel::condominium::Condominium::from(condominium))
     }
+  }
+}
+
+#[delete("/condominiums/{condominium_id}")]
+async fn delete(
+  db: web::Data<contract::repositories::Database>,
+  path_params: web::Path<i32>,
+) -> impl Responder {
+  let db = db.get_ref();
+
+  match condominiums::delete(&db, path_params.into_inner()).await {
+    Err(err) => {
+      error!("{}", err);
+      HttpResponse::ServiceUnavailable()
+    }
+    Ok(()) => HttpResponse::Ok(),
   }
 }

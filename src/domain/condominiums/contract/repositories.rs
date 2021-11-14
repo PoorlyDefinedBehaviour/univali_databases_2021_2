@@ -17,4 +17,6 @@ pub trait CondominiumRepository {
     condominium_id: i32,
     data: dto::condominium::Create,
   ) -> Result<Condominium>;
+
+  async fn delete(&self, condominium_id: i32) -> Result<()>;
 }

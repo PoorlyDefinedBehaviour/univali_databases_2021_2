@@ -46,3 +46,7 @@ pub async fn update(
 ) -> Result<Condominium> {
   db.condominium.update(condominium_id, data).await
 }
+
+pub async fn delete(db: &contract::repositories::Database, condominium_id: i32) -> Result<()> {
+  db.condominium.delete(condominium_id).await
+}

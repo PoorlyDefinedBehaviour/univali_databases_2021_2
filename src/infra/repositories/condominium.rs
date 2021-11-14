@@ -48,7 +48,7 @@ impl CondominiumRepository {
         tab_state.name as state_name
       FROM tab_condominium
       INNER JOIN tab_address
-      ON tab_address.id = tab_condominium.address_id
+      ON tab_address.condominium_id = tab_condominium.id
       INNER JOIN tab_city
       ON tab_city.id = tab_address.city_id
       INNER JOIN tab_state
@@ -86,7 +86,7 @@ impl contract::repositories::CondominiumRepository for CondominiumRepository {
         tab_state.name as state_name
       FROM tab_condominium
       INNER JOIN tab_address 
-      ON tab_address.id = tab_condominium.address_id
+      ON tab_address.condominium_id = tab_condominium.id
       INNER JOIN tab_city
       ON tab_city.id = tab_address.city_id
       INNER JOIN tab_state
@@ -104,26 +104,26 @@ impl contract::repositories::CondominiumRepository for CondominiumRepository {
   async fn create(&self, data: dto::condominium::Create) -> Result<Condominium> {
     let mut tx = self.pool.begin().await?;
 
-    let insert_address_result = sqlx::query!(
+    let insert_condominium_result = sqlx::query!(
       r#"
-      INSERT INTO tab_address (street, number, city_id)
-      VALUES (?, ?, ?)
+      INSERT INTO tab_condominium (name, cnpj)
+      VALUES (?, ?)
       "#,
-      data.address.street,
-      data.address.number,
-      data.address.city_id,
+      data.name,
+      data.cnpj,
     )
     .execute(&mut tx)
     .await?;
 
-    let insert_condominium_result = sqlx::query!(
+    let _ = sqlx::query!(
       r#"
-      INSERT INTO tab_condominium (name, cnpj, address_id)
-      VALUES (?, ?, ?)
+      INSERT INTO tab_address (street, number, city_id, condominium_id)
+      VALUES (?, ?, ?, ?)
       "#,
-      data.name,
-      data.cnpj,
-      insert_address_result.last_insert_id(),
+      data.address.street,
+      data.address.number,
+      data.address.city_id,
+      insert_condominium_result.last_insert_id(),
     )
     .execute(&mut tx)
     .await?;
@@ -152,7 +152,7 @@ impl contract::repositories::CondominiumRepository for CondominiumRepository {
         street = ?,
         number = ?,
         city_id = ?
-      WHERE id = ?
+      WHERE condominium_id = ?
       "#,
       data.address.street,
       data.address.number,
@@ -182,5 +182,13 @@ impl contract::repositories::CondominiumRepository for CondominiumRepository {
     let condominium = self.get_by_id(condominium_id).await?.unwrap();
 
     Ok(condominium)
+  }
+
+  async fn delete(&self, condominium_id: i32) -> Result<()> {
+    let _ = sqlx::query!("DELETE FROM tab_condominium WHERE id = ?", condominium_id)
+      .execute(&self.pool)
+      .await?;
+
+    Ok(())
   }
 }
