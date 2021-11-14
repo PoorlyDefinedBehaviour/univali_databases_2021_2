@@ -36,7 +36,7 @@ sqlx migrate run
 ## Running the app
 
 ```console
-RUST_LOG=databases_1_m3_1=trace HOST=127.0.0.1 PORT=8080 cargo run
+RUST_LOG=databases_1_m3_1=trace cargo run
 ```
 
 ## Accessing the database inside Docker
