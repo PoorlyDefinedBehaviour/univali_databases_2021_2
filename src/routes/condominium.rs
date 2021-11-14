@@ -14,7 +14,7 @@ pub fn init(config: &mut web::ServiceConfig) {
 async fn get_all(db: web::Data<contract::repositories::Database>) -> impl Responder {
   let db = db.get_ref();
 
-  match condominiums::get_all(&db).await {
+  match condominiums::get_all(db).await {
     Err(err) => {
       error!("{}", err);
       HttpResponse::ServiceUnavailable().finish()
@@ -37,7 +37,7 @@ async fn create(
 ) -> impl Responder {
   let db = db.get_ref();
 
-  match condominiums::create(&db, data.into_inner().into()).await {
+  match condominiums::create(db, data.into_inner().into()).await {
     Err(err) => {
       error!("{}", err);
       HttpResponse::ServiceUnavailable().finish()
@@ -56,7 +56,7 @@ async fn update(
 ) -> impl Responder {
   let db = db.get_ref();
 
-  match condominiums::update(&db, path_params.into_inner(), data.into_inner().into()).await {
+  match condominiums::update(db, path_params.into_inner(), data.into_inner().into()).await {
     Err(err) => {
       error!("{}", err);
       HttpResponse::ServiceUnavailable().finish()
@@ -74,7 +74,7 @@ async fn delete(
 ) -> impl Responder {
   let db = db.get_ref();
 
-  match condominiums::delete(&db, path_params.into_inner()).await {
+  match condominiums::delete(db, path_params.into_inner()).await {
     Err(err) => {
       error!("{}", err);
       HttpResponse::ServiceUnavailable()
