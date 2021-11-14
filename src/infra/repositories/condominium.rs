@@ -48,11 +48,11 @@ impl CondominiumRepository {
         tab_state.name as state_name
       FROM tab_condominium
       INNER JOIN tab_address
-      ON tab_address.condominium_id = tab_condominium.id
+      ON tab_address.id = tab_condominium.address_id
       INNER JOIN tab_city
       ON tab_city.id = tab_address.city_id
       INNER JOIN tab_state
-      ON tab_state.id = tab_city.id
+      ON tab_state.id = tab_city.state_id
       WHERE tab_condominium.id = ?
       LIMIT 1
       ",
@@ -86,7 +86,7 @@ impl contract::repositories::CondominiumRepository for CondominiumRepository {
         tab_state.name as state_name
       FROM tab_condominium
       INNER JOIN tab_address 
-      ON tab_address.condominium_id = tab_condominium.id
+      ON tab_address.id = tab_condominium.address_id
       INNER JOIN tab_city
       ON tab_city.id = tab_address.city_id
       INNER JOIN tab_state
@@ -104,26 +104,26 @@ impl contract::repositories::CondominiumRepository for CondominiumRepository {
   async fn create(&self, data: dto::condominium::Create) -> Result<Condominium> {
     let mut tx = self.pool.begin().await?;
 
-    let insert_condominium_result = sqlx::query!(
+    let insert_address_result = sqlx::query!(
       r#"
-      INSERT INTO tab_condominium (name, cnpj)
-      VALUES (?, ?)
-      "#,
-      data.name,
-      data.cnpj,
-    )
-    .execute(&mut tx)
-    .await?;
-
-    let _ = sqlx::query!(
-      r#"
-      INSERT INTO tab_address (street, number, city_id, condominium_id)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO tab_address (street, number, city_id)
+      VALUES (?, ?, ?)
       "#,
       data.address.street,
       data.address.number,
       data.address.city_id,
-      insert_condominium_result.last_insert_id(),
+    )
+    .execute(&mut tx)
+    .await?;
+
+    let insert_condominium_result = sqlx::query!(
+      r#"
+      INSERT INTO tab_condominium (name, cnpj, address_id)
+      VALUES (?, ?, ?)
+      "#,
+      data.name,
+      data.cnpj,
+      insert_address_result.last_insert_id(),
     )
     .execute(&mut tx)
     .await?;
@@ -147,12 +147,14 @@ impl contract::repositories::CondominiumRepository for CondominiumRepository {
 
     sqlx::query!(
       r#"
-      UPDATE tab_address
+      UPDATE tab_condominium
+      INNER JOIN tab_address
+      ON tab_address.id = tab_condominium.id
       SET 
-        street = ?,
-        number = ?,
-        city_id = ?
-      WHERE condominium_id = ?
+        tab_address.street = ?,
+        tab_address.number = ?,
+        tab_address.city_id = ?
+      WHERE tab_condominium.id = ?
       "#,
       data.address.street,
       data.address.number,
