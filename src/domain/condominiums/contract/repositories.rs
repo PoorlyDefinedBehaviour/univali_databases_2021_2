@@ -8,6 +8,8 @@ pub struct Database {
 
 #[async_trait]
 pub trait CondominiumRepository {
+  async fn get_all(&self) -> Result<Vec<Condominium>>;
+
   async fn create(&self, data: dto::condominium::Create) -> Result<Condominium>;
 
   async fn update(

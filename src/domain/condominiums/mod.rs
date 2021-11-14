@@ -28,6 +28,10 @@ pub struct Condominium {
   pub address: Address,
 }
 
+pub async fn get_all(db: &contract::repositories::Database) -> Result<Vec<Condominium>> {
+  db.condominium.get_all().await
+}
+
 pub async fn create(
   db: &contract::repositories::Database,
   data: dto::condominium::Create,
