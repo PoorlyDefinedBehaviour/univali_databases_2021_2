@@ -152,7 +152,7 @@ impl contract::CondominiumRepository for CondominiumRepository {
       r#"
       UPDATE tab_condominium
       INNER JOIN tab_address
-      ON tab_address.id = tab_condominium.id
+      ON tab_address.id = tab_condominium.address_id
       SET 
         tab_address.street = ?,
         tab_address.number = ?,
