@@ -30,4 +30,6 @@ pub trait EmployeeRepository {
   async fn get_all(&self) -> Result<Vec<employees::Employee>>;
 
   async fn create(&self, data: employees::dto::Create) -> Result<employees::Employee>;
+
+  async fn update(&self, employee_id: i32, data: employees::dto::Update) -> Result<Condominium>;
 }
