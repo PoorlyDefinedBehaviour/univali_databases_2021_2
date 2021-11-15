@@ -417,6 +417,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5827cebf4670468b8772dd191856768aedcb1b0278a04f989f7766351917b9dc"
 
 [[package]]
+name = "cpf_cnpj"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "614e51338f9c587f98dd12245cd2cabba8b981cc25e9a6c20257cfc64a09abf9"
+
+[[package]]
 name = "cpufeatures"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -487,6 +493,7 @@ dependencies = [
  "actix-web",
  "anyhow",
  "async-trait",
+ "cpf_cnpj",
  "dotenv",
  "env_logger",
  "log",

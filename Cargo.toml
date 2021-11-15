@@ -16,3 +16,4 @@ env_logger = "0.8.4"
 async-trait = "0.1.51"
 anyhow = "1.0"
 serde = { version = "1.0", features = ["derive"] }
+cpf_cnpj = "0.1.0"
