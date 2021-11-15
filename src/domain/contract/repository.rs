@@ -1,7 +1,4 @@
-use crate::domain::{
-  condominiums::{dto, Condominium},
-  employees,
-};
+use crate::domain::{condominiums, employees};
 use anyhow::Result;
 use async_trait::async_trait;
 
@@ -12,15 +9,15 @@ pub struct Database {
 
 #[async_trait]
 pub trait CondominiumRepository {
-  async fn get_all(&self) -> Result<Vec<Condominium>>;
+  async fn get_all(&self) -> Result<Vec<condominiums::Condominium>>;
 
-  async fn create(&self, data: dto::condominium::Create) -> Result<Condominium>;
+  async fn create(&self, data: condominiums::dto::Create) -> Result<condominiums::Condominium>;
 
   async fn update(
     &self,
     condominium_id: i32,
-    data: dto::condominium::Update,
-  ) -> Result<Condominium>;
+    data: condominiums::dto::Update,
+  ) -> Result<condominiums::Condominium>;
 
   async fn delete(&self, condominium_id: i32) -> Result<()>;
 }

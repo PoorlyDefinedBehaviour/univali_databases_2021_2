@@ -1,5 +1,5 @@
 use crate::domain::{
-  condominiums::{dto, Address, City, Condominium, State},
+  condominiums::{self, Address, City, Condominium, State},
   contract,
 };
 use anyhow::Result;
@@ -104,7 +104,7 @@ impl contract::CondominiumRepository for CondominiumRepository {
     Ok(condominiums)
   }
 
-  async fn create(&self, data: dto::condominium::Create) -> Result<Condominium> {
+  async fn create(&self, data: condominiums::dto::Create) -> Result<Condominium> {
     let mut tx = self.pool.begin().await?;
 
     let insert_address_result = sqlx::query!(
@@ -144,7 +144,7 @@ impl contract::CondominiumRepository for CondominiumRepository {
   async fn update(
     &self,
     condominium_id: i32,
-    data: dto::condominium::Create,
+    data: condominiums::dto::Create,
   ) -> Result<Condominium> {
     let mut tx = self.pool.begin().await?;
 

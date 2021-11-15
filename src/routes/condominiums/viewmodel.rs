@@ -1,4 +1,4 @@
-use crate::domain::{condominiums, condominiums::dto};
+use crate::domain::condominiums;
 use serde::{Deserialize, Serialize};
 use std::convert::{From, Into};
 
@@ -68,12 +68,12 @@ pub struct Create {
   pub address: CreateCondominiumAddress,
 }
 
-impl Into<dto::condominium::Create> for Create {
-  fn into(self) -> dto::condominium::Create {
-    dto::condominium::Create {
+impl Into<condominiums::dto::Create> for Create {
+  fn into(self) -> condominiums::dto::Create {
+    condominiums::dto::Create {
       name: self.name,
       cnpj: self.cnpj,
-      address: dto::condominium::Address {
+      address: condominiums::dto::Address {
         street: self.address.street,
         number: self.address.number,
         city_id: self.address.city_id,

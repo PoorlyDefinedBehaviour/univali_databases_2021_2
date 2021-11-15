@@ -33,17 +33,14 @@ pub async fn get_all(db: &contract::Database) -> Result<Vec<Condominium>> {
   db.condominium.get_all().await
 }
 
-pub async fn create(
-  db: &contract::Database,
-  data: dto::condominium::Create,
-) -> Result<Condominium> {
+pub async fn create(db: &contract::Database, data: dto::Create) -> Result<Condominium> {
   db.condominium.create(data).await
 }
 
 pub async fn update(
   db: &contract::Database,
   condominium_id: i32,
-  data: dto::condominium::Update,
+  data: dto::Update,
 ) -> Result<Condominium> {
   db.condominium.update(condominium_id, data).await
 }
