@@ -17,6 +17,8 @@ impl TryFrom<String> for Cpf {
 
   fn try_from(value: String) -> Result<Self, Self::Error> {
     if cpf::validate(&value) {
+      // This is O(1) since a cpf cannot be longer than 11 characters.
+      let value: String = value.chars().filter(|c| c.is_digit(10)).collect();
       Ok(Self(value))
     } else {
       Err(ValidationError {
@@ -30,6 +32,14 @@ impl TryFrom<String> for Cpf {
 #[cfg(test)]
 mod tests {
   use super::*;
+
+  #[test]
+  fn removes_characters_that_arent_digits() {
+    assert_eq!(
+      Ok(Cpf(String::from("93141871019"))),
+      Cpf::try_from(String::from("931.418.710-19"))
+    );
+  }
 
   #[test]
   fn only_valid_cpfs_can_be_created() {
