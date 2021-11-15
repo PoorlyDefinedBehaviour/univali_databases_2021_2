@@ -36,7 +36,7 @@ sqlx migrate run
 ## Running the app
 
 ```console
-RUST_LOG=databases_1_m3_1=trace cargo run
+cargo run
 ```
 
 ## Accessing the database inside Docker

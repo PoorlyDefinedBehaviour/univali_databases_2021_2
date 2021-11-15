@@ -13,6 +13,8 @@ mod routes;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+  std::env::set_var("RUST_LOG", "databases_1_m3_1=trace");
+
   dotenv().ok();
 
   env_logger::init();
