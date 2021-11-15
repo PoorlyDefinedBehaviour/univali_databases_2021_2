@@ -19,7 +19,7 @@ pub trait CondominiumRepository {
   async fn update(
     &self,
     condominium_id: i32,
-    data: dto::condominium::Create,
+    data: dto::condominium::Update,
   ) -> Result<Condominium>;
 
   async fn delete(&self, condominium_id: i32) -> Result<()>;
