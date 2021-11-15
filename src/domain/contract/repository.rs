@@ -27,5 +27,7 @@ pub trait CondominiumRepository {
 
 #[async_trait]
 pub trait EmployeeRepository {
+  async fn get_all(&self) -> Result<Vec<employees::Employee>>;
+
   async fn create(&self, data: employees::dto::Create) -> Result<employees::Employee>;
 }

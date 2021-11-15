@@ -92,6 +92,46 @@ impl EmployeeRepository {
 
 #[async_trait]
 impl contract::EmployeeRepository for EmployeeRepository {
+  async fn get_all(&self) -> Result<Vec<employees::Employee>> {
+    let employees = sqlx::query(
+      "
+      SELECT 
+        tab_employee.id as employee_id,
+        tab_employee.name as employee_name,
+        tab_employee.cpf employee_cpf,
+        tab_employee.wage_in_cents employee_wage_in_cents,
+        tab_shift.id as shift_id,
+        tab_shift.name as shift_name,
+        tab_role.id as role_id,
+        tab_role.name as role_name,
+        tab_address.id as address_id,
+        tab_address.street as address_street,
+        tab_address.number as address_number,
+        tab_city.id as city_id,
+        tab_city.name as city_name,
+        tab_state.id as state_id,
+        tab_state.name as state_name
+      FROM tab_employee
+      INNER JOIN tab_shift
+      ON tab_shift.id = tab_employee.shift_id
+      INNER JOIN tab_role
+      ON tab_role.id = tab_employee.role_id
+      INNER JOIN tab_address
+      ON tab_address.id = tab_employee.address_id
+      INNER JOIN tab_city 
+      ON tab_city.id = tab_address.city_id
+      INNER JOIN tab_state
+      ON tab_state.id = tab_city.state_id
+      ORDER BY tab_employee.created_at DESC
+    ",
+    )
+    .try_map(row_to_employee)
+    .fetch_all(&self.pool)
+    .await?;
+
+    Ok(employees)
+  }
+
   async fn create(&self, data: employees::dto::Create) -> Result<employees::Employee> {
     let mut tx = self.pool.begin().await?;
 

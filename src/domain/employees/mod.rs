@@ -41,6 +41,10 @@ pub struct Employee {
   pub address: Address,
 }
 
+pub async fn get_all(db: &contract::Database) -> Result<Vec<Employee>> {
+  db.employee.get_all().await
+}
+
 pub async fn create(db: &contract::Database, data: dto::Create) -> Result<Employee> {
   db.employee.create(data).await
 }

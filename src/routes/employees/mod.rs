@@ -1,12 +1,30 @@
 use std::convert::TryInto;
 
-use actix_web::{post, web, HttpResponse, Responder};
+use actix_web::{get, post, web, HttpResponse, Responder};
 
 use crate::domain::{contract, employees};
 mod viewmodel;
 
 pub fn init(config: &mut web::ServiceConfig) {
-  config.service(create);
+  config.service(create).service(get_all);
+}
+
+#[get("/employees")]
+async fn get_all(db: web::Data<contract::Database>) -> impl Responder {
+  match employees::get_all(db.get_ref()).await {
+    Err(err) => {
+      error!("{}", err);
+      HttpResponse::ServiceUnavailable().finish()
+    }
+    Ok(employees) => {
+      let view = employees
+        .into_iter()
+        .map(viewmodel::Employee::from)
+        .collect::<Vec<_>>();
+
+      HttpResponse::Ok().json(view)
+    }
+  }
 }
 
 #[post("/employees")]
