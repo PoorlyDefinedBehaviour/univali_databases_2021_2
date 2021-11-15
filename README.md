@@ -16,7 +16,7 @@ cargo install sqlx-cli --locked --no-default-features --features mysql
 
 I will use Docker, if you have MySQL on your system, that will work too.
 
-I you choose to use the MySQL thats installed on your system,
+If you choose to use the MySQL thats installed on your system,
 make sure its credentials match the credentials in the `.env` file.
 
 ```console
