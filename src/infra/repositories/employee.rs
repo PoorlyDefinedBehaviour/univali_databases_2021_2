@@ -237,8 +237,6 @@ impl contract::EmployeeRepository for EmployeeRepository {
   }
 
   async fn delete(&self, employee_id: i32) -> Result<()> {
-    let mut tx = self.pool.begin().await?;
-
     let _ = sqlx::query!(
       "
       DELETE tab_employee, tab_address 
@@ -249,10 +247,8 @@ impl contract::EmployeeRepository for EmployeeRepository {
     ",
       employee_id
     )
-    .execute(&mut tx)
+    .execute(&self.pool)
     .await?;
-
-    tx.commit().await?;
 
     Ok(())
   }
