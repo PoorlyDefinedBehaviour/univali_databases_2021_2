@@ -1,12 +1,12 @@
 use std::convert::TryInto;
 
-use actix_web::{get, post, web, HttpResponse, Responder};
+use actix_web::{get, patch, post, web, HttpResponse, Responder};
 
 use crate::domain::{contract, employees};
 mod viewmodel;
 
 pub fn init(config: &mut web::ServiceConfig) {
-  config.service(create).service(get_all);
+  config.service(get_all).service(create).service(update);
 }
 
 #[get("/employees")]
@@ -32,13 +32,31 @@ async fn create(
   db: web::Data<contract::Database>,
   data: web::Json<viewmodel::Create>,
 ) -> impl Responder {
-  let db = db.get_ref();
-
   match data.into_inner().try_into() {
     Err(validation_error) => {
       HttpResponse::BadRequest().json(viewmodel::ValidationError::from(validation_error))
     }
-    Ok(dto) => match employees::create(db, dto).await {
+    Ok(dto) => match employees::create(db.get_ref(), dto).await {
+      Err(err) => {
+        error!("{}", err);
+        HttpResponse::ServiceUnavailable().finish()
+      }
+      Ok(employee) => HttpResponse::Ok().json(viewmodel::Employee::from(employee)),
+    },
+  }
+}
+
+#[patch("/employees/{employee_id}")]
+async fn update(
+  db: web::Data<contract::Database>,
+  employee_id: web::Path<i32>,
+  data: web::Json<viewmodel::Update>,
+) -> impl Responder {
+  match data.into_inner().try_into() {
+    Err(validation_error) => {
+      HttpResponse::BadRequest().json(viewmodel::ValidationError::from(validation_error))
+    }
+    Ok(dto) => match employees::update(db.get_ref(), employee_id.into_inner(), dto).await {
       Err(err) => {
         error!("{}", err);
         HttpResponse::ServiceUnavailable().finish()

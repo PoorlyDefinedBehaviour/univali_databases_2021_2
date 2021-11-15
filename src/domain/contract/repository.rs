@@ -31,5 +31,9 @@ pub trait EmployeeRepository {
 
   async fn create(&self, data: employees::dto::Create) -> Result<employees::Employee>;
 
-  async fn update(&self, employee_id: i32, data: employees::dto::Update) -> Result<Condominium>;
+  async fn update(
+    &self,
+    employee_id: i32,
+    data: employees::dto::Update,
+  ) -> Result<employees::Employee>;
 }

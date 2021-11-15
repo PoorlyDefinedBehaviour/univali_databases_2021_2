@@ -115,3 +115,5 @@ impl From<employees::Employee> for Employee {
     }
   }
 }
+
+pub type Update = Create;

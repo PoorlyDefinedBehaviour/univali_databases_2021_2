@@ -179,4 +179,60 @@ impl contract::EmployeeRepository for EmployeeRepository {
 
     Ok(employee.unwrap())
   }
+
+  async fn update(
+    &self,
+    employee_id: i32,
+    data: employees::dto::Update,
+  ) -> Result<employees::Employee> {
+    let mut tx = self.pool.begin().await?;
+
+    sqlx::query!(
+      r#"
+      UPDATE tab_employee
+      INNER JOIN tab_address
+      ON tab_address.id = tab_employee.address_id
+      SET 
+        tab_address.street = ?,
+        tab_address.number = ?,
+        tab_address.city_id = ?
+      WHERE tab_employee.id = ?
+      "#,
+      data.address.street,
+      data.address.number,
+      data.address.city_id,
+      employee_id,
+    )
+    .execute(&mut tx)
+    .await?;
+
+    sqlx::query!(
+      "
+      UPDATE tab_employee 
+      SET
+        name = ?,
+        cpf = ?,
+        wage_in_cents = ?,
+        works_at_condominium_id = ?,
+        shift_id = ?,
+        role_id = ?
+      WHERE tab_employee.id = ?
+      ",
+      data.name,
+      data.cpf.into_inner(),
+      data.wage_in_cents,
+      data.works_at_condominium_id,
+      data.shift_id,
+      data.role_id,
+      employee_id,
+    )
+    .execute(&mut tx)
+    .await?;
+
+    tx.commit().await?;
+
+    let employee = self.get_by_id(employee_id).await?;
+
+    Ok(employee.unwrap())
+  }
 }

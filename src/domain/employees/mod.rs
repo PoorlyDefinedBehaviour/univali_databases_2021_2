@@ -48,3 +48,11 @@ pub async fn get_all(db: &contract::Database) -> Result<Vec<Employee>> {
 pub async fn create(db: &contract::Database, data: dto::Create) -> Result<Employee> {
   db.employee.create(data).await
 }
+
+pub async fn update(
+  db: &contract::Database,
+  employee_id: i32,
+  data: dto::Update,
+) -> Result<Employee> {
+  db.employee.update(employee_id, data).await
+}

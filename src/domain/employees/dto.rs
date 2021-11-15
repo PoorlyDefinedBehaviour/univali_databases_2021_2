@@ -15,3 +15,5 @@ pub struct Create {
   pub role_id: i32,
   pub address: Address,
 }
+
+pub type Update = Create;
