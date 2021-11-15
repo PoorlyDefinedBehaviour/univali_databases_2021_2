@@ -1,12 +1,16 @@
 use std::convert::TryInto;
 
-use actix_web::{get, patch, post, web, HttpResponse, Responder};
+use actix_web::{delete, get, patch, post, web, HttpResponse, Responder};
 
 use crate::domain::{contract, employees};
 mod viewmodel;
 
 pub fn init(config: &mut web::ServiceConfig) {
-  config.service(get_all).service(create).service(update);
+  config
+    .service(get_all)
+    .service(create)
+    .service(update)
+    .service(delete);
 }
 
 #[get("/employees")]
@@ -63,5 +67,16 @@ async fn update(
       }
       Ok(employee) => HttpResponse::Ok().json(viewmodel::Employee::from(employee)),
     },
+  }
+}
+
+#[delete("/employees/{employee_id}")]
+async fn delete(db: web::Data<contract::Database>, employee_id: web::Path<i32>) -> impl Responder {
+  match employees::delete(db.get_ref(), employee_id.into_inner()).await {
+    Err(err) => {
+      error!("{}", err);
+      HttpResponse::ServiceUnavailable()
+    }
+    Ok(()) => HttpResponse::Ok(),
   }
 }

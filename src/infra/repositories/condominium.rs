@@ -190,6 +190,7 @@ impl contract::CondominiumRepository for CondominiumRepository {
   }
 
   async fn delete(&self, condominium_id: i32) -> Result<()> {
+    // TODO: check if address is being deleted
     let _ = sqlx::query!("DELETE FROM tab_condominium WHERE id = ?", condominium_id)
       .execute(&self.pool)
       .await?;

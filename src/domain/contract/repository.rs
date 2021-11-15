@@ -33,4 +33,6 @@ pub trait EmployeeRepository {
     employee_id: i32,
     data: employees::dto::Update,
   ) -> Result<employees::Employee>;
+
+  async fn delete(&self, employee_id: i32) -> Result<()>;
 }

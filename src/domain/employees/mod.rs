@@ -56,3 +56,7 @@ pub async fn update(
 ) -> Result<Employee> {
   db.employee.update(employee_id, data).await
 }
+
+pub async fn delete(db: &contract::Database, employee_id: i32) -> Result<()> {
+  db.employee.delete(employee_id).await
+}
