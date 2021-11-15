@@ -1,4 +1,7 @@
-use crate::domain::condominiums::{contract, dto, Address, City, Condominium, State};
+use crate::domain::{
+  condominiums::{dto, Address, City, Condominium, State},
+  contract,
+};
 use anyhow::Result;
 use async_trait::async_trait;
 use sqlx::{
@@ -69,7 +72,7 @@ impl CondominiumRepository {
 }
 
 #[async_trait]
-impl contract::repositories::CondominiumRepository for CondominiumRepository {
+impl contract::CondominiumRepository for CondominiumRepository {
   async fn get_all(&self) -> Result<Vec<Condominium>> {
     let condominiums = sqlx::query(
       "

@@ -36,7 +36,7 @@ async fn main() -> std::io::Result<()> {
     App::new()
       .app_data(Data::new(repositories::new(db_pool.clone())))
       .wrap(middleware::Logger::default())
-      .configure(routes::condominium::init)
+      .configure(routes::init)
   })
   .bind((host, port))?
   .run()
