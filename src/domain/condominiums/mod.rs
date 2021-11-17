@@ -25,6 +25,7 @@ pub struct Address {
 pub struct Condominium {
   pub id: i32,
   pub name: String,
+  // TODO: make cnpj a value object and validate it
   pub cnpj: String,
   pub address: Address,
 }

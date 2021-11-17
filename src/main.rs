@@ -2,6 +2,7 @@
 extern crate log;
 
 use crate::infra::repositories;
+use actix_cors::Cors;
 use actix_web::{middleware, web::Data, App, HttpServer};
 use dotenv::dotenv;
 use sqlx::mysql::MySqlPoolOptions;
@@ -38,6 +39,7 @@ async fn main() -> std::io::Result<()> {
     App::new()
       .app_data(Data::new(repositories::new(db_pool.clone())))
       .wrap(middleware::Logger::default())
+      .wrap(Cors::permissive())
       .configure(routes::init)
   })
   .bind((host, port))?
