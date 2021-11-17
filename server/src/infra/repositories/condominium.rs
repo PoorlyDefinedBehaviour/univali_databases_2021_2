@@ -1,5 +1,6 @@
 use crate::domain::{
-  condominiums::{self, Address, City, Condominium, State},
+  cities::{City, State},
+  condominiums::{self, Address, Condominium},
   contract,
 };
 use anyhow::Result;

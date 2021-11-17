@@ -1,10 +1,11 @@
-use crate::domain::{condominiums, employees};
+use crate::domain::{cities, condominiums, employees};
 use anyhow::Result;
 use async_trait::async_trait;
 
 pub struct Database {
   pub condominium: Box<dyn CondominiumRepository>,
   pub employee: Box<dyn EmployeeRepository>,
+  pub city: Box<dyn CityRepository>,
 }
 
 #[async_trait]
@@ -35,4 +36,9 @@ pub trait EmployeeRepository {
   ) -> Result<employees::Employee>;
 
   async fn delete(&self, employee_id: i32) -> Result<()>;
+}
+
+#[async_trait]
+pub trait CityRepository {
+  async fn get_all(&self) -> Result<Vec<cities::City>>;
 }

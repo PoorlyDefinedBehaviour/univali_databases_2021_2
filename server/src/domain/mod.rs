@@ -1,3 +1,4 @@
+pub mod cities;
 pub mod condominiums;
 pub mod contract;
 pub mod employees;

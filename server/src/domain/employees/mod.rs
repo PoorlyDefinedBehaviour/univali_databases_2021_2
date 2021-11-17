@@ -1,18 +1,7 @@
 use anyhow::Result;
 
-use super::{contract, value_objects::cpf::Cpf};
+use super::{cities::City, contract, value_objects::cpf::Cpf};
 pub mod dto;
-
-pub struct State {
-  pub id: i32,
-  pub name: String,
-}
-
-pub struct City {
-  pub id: i32,
-  pub name: String,
-  pub state: State,
-}
 
 pub struct Address {
   pub id: i32,

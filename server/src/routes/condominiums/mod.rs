@@ -76,3 +76,4 @@ async fn delete(db: web::Data<contract::Database>, path_params: web::Path<i32>) 
     Ok(()) => HttpResponse::Ok(),
   }
 }
+

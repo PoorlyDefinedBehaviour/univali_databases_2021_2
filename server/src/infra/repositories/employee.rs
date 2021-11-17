@@ -7,7 +7,7 @@ use sqlx::{
   Pool, Row,
 };
 
-use crate::domain::{contract, employees, value_objects::cpf::Cpf};
+use crate::domain::{cities, contract, employees, value_objects::cpf::Cpf};
 
 pub(super) struct EmployeeRepository {
   pub pool: Pool<MySql>,
@@ -33,10 +33,10 @@ fn row_to_employee(row: MySqlRow) -> Result<employees::Employee, sqlx::Error> {
       id: row.try_get("address_id")?,
       street: row.try_get("address_street")?,
       number: row.try_get("address_number")?,
-      city: employees::City {
+      city: cities::City {
         id: row.try_get("city_id")?,
         name: row.try_get("city_name")?,
-        state: employees::State {
+        state: cities::State {
           id: row.try_get("state_id")?,
           name: row.try_get("state_name")?,
         },
