@@ -45,6 +45,13 @@ fn row_to_employee(row: MySqlRow) -> Result<employees::Employee, sqlx::Error> {
   })
 }
 
+fn row_to_shift(row: MySqlRow) -> Result<employees::Shift, sqlx::Error> {
+  Ok(employees::Shift {
+    id: row.try_get("shift_id")?,
+    name: row.try_get("shift_name")?,
+  })
+}
+
 impl EmployeeRepository {
   async fn get_by_id(&self, id: i32) -> Result<Option<employees::Employee>> {
     let row = sqlx::query(
@@ -251,5 +258,22 @@ impl contract::EmployeeRepository for EmployeeRepository {
     .await?;
 
     Ok(())
+  }
+
+  async fn get_all_shifts(&self) -> Result<Vec<employees::Shift>> {
+    let shifts = sqlx::query(
+      "
+      SELECT 
+        id as shift_id,
+        name as shift_name
+      FROM tab_shift
+      ORDER BY name ASC
+    ",
+    )
+    .try_map(row_to_shift)
+    .fetch_all(&self.pool)
+    .await?;
+
+    Ok(shifts)
   }
 }

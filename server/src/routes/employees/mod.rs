@@ -10,7 +10,8 @@ pub fn init(config: &mut web::ServiceConfig) {
     .service(get_all)
     .service(create)
     .service(update)
-    .service(delete);
+    .service(delete)
+    .service(get_all_shifts);
 }
 
 #[get("/employees")]
@@ -78,5 +79,23 @@ async fn delete(db: web::Data<contract::Database>, employee_id: web::Path<i32>) 
       HttpResponse::ServiceUnavailable()
     }
     Ok(()) => HttpResponse::Ok(),
+  }
+}
+
+#[get("/employees/shifts")]
+async fn get_all_shifts(db: web::Data<contract::Database>) -> impl Responder {
+  match employees::get_all_shifts(db.get_ref()).await {
+    Err(err) => {
+      error!("{}", err);
+      HttpResponse::ServiceUnavailable().finish()
+    }
+    Ok(shifts) => {
+      let view = shifts
+        .into_iter()
+        .map(viewmodel::Shift::from)
+        .collect::<Vec<_>>();
+
+      HttpResponse::Ok().json(view)
+    }
   }
 }

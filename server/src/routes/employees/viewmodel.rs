@@ -117,3 +117,18 @@ impl From<employees::Employee> for Employee {
 }
 
 pub type Update = Create;
+
+#[derive(Serialize, Deserialize)]
+pub struct Shift {
+  pub id: i32,
+  pub name: String,
+}
+
+impl From<employees::Shift> for Shift {
+  fn from(item: employees::Shift) -> Self {
+    Self {
+      id: item.id,
+      name: item.name,
+    }
+  }
+}

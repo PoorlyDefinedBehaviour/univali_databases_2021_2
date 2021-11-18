@@ -36,6 +36,8 @@ pub trait EmployeeRepository {
   ) -> Result<employees::Employee>;
 
   async fn delete(&self, employee_id: i32) -> Result<()>;
+
+  async fn get_all_shifts(&self) -> Result<Vec<employees::Shift>>;
 }
 
 #[async_trait]

@@ -49,3 +49,7 @@ pub async fn update(
 pub async fn delete(db: &contract::Database, employee_id: i32) -> Result<()> {
   db.employee.delete(employee_id).await
 }
+
+pub async fn get_all_shifts(db: &contract::Database) -> Result<Vec<Shift>> {
+  db.employee.get_all_shifts().await
+}
