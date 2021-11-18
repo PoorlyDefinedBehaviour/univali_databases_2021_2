@@ -1,5 +1,4 @@
-import { FormEventHandler } from "react"
-import { ChangeEvent, useState } from "react"
+import { useState } from "react"
 import { useQuery } from "react-query"
 
 import { getAll } from "../../services/cities"

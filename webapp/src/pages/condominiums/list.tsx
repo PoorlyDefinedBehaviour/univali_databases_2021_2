@@ -1,14 +1,15 @@
 import { useState } from "react"
 import { useQuery } from "react-query"
-import { getAll, Condominium }  from "../../services/condominiums"
+import { getAll, Condominium, deleteById }  from "../../services/condominiums"
 import { EditCondominium } from "./edit"
 
 type CondominiumProps = {
   data: Condominium
   onEdit: () => void
+  onDelete: () => void
 }
 
-const Card = ({ data, onEdit }: CondominiumProps) => (
+const Card = ({ data, onEdit, onDelete}: CondominiumProps) => (
   <div className="max-w-md py-4 px-8 bg-white shadow-lg rounded-lg my-20">
     <div>
       <h2 className="text-gray-800 text-3xl font-semibold">{data.name}</h2>
@@ -24,7 +25,10 @@ const Card = ({ data, onEdit }: CondominiumProps) => (
       >
         Editar
       </button>
-      <button className="flex justify-end mt-4 bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">
+      <button 
+        className="flex justify-end mt-4 bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
+        onClick={onDelete}
+      >
         Excluir
       </button>
     </div>
@@ -46,7 +50,14 @@ export const Condominiums = () => {
 
   return (
    <div>
-     { condominiums?.map(condominium => <Card key={condominium.id} data={condominium} onEdit={() => setEditing(condominium)}/>) }
+     { condominiums?.map(condominium =>
+         <Card 
+            key={condominium.id}
+            data={condominium} 
+            onEdit={() => setEditing(condominium)}
+            onDelete={() => deleteById(condominium.id)}
+          />) 
+     }
    </div>
    )
 }

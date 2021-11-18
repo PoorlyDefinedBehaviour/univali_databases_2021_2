@@ -29,3 +29,6 @@ export const getAll = () =>
   fetch(`${API_URL}/condominiums`)
   .then(response => response.json())
   .then(response => (response as unknown) as Condominium[])
+
+export const deleteById = (condominiumId: number) => 
+  fetch(`${API_URL}/condominiums/${condominiumId}`, { method: "DELETE"})
