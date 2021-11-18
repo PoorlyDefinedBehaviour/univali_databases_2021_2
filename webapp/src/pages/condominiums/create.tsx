@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useQuery } from "react-query"
 import { useHistory } from "react-router-dom"
 import { getAll } from "../../services/cities"
-import { Condominium, update } from "../../services/condominiums"
+import { create } from "../../services/condominiums"
 
 interface Form {
   name: string 
@@ -12,19 +12,15 @@ interface Form {
   cityId: number
 }
 
-interface Props {
-  condominium: Condominium
-}
-
-export const EditCondominium = ({ condominium }: Props) => {
+export const CreateCondominium = () => {
   const { isLoading, data: cities } = useQuery("get_all_cities", getAll)
 
   const [form, setForm] = useState<Form>({
-    name: condominium.name,
-    cnpj: condominium.cnpj,
-    street: condominium.address.street,
-    number: condominium.address.number,
-    cityId: condominium.address.city.id
+    name: "",
+    cnpj: "",
+    street: "",
+    number: "",
+    cityId: -1,
   })
 
 
@@ -44,7 +40,7 @@ export const EditCondominium = ({ condominium }: Props) => {
   const handleSubmit = (event: any) => {
     event.preventDefault()
     
-    update(condominium.id, {
+    create({
       name: form.name,
       cnpj: form.cnpj,
       address: {

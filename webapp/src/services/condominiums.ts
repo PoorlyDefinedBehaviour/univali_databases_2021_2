@@ -33,7 +33,7 @@ export const getAll = () =>
 export const deleteById = (condominiumId: number) => 
   fetch(`${API_URL}/condominiums/${condominiumId}`, { method: "DELETE"})
 
-export interface Update {
+export interface Create {
   name: string 
   cnpj: string 
   address: {
@@ -42,6 +42,19 @@ export interface Update {
     city_id: number
   }
 }
+
+export const create = (data: Create) => 
+  fetch(`${API_URL}/condominiums`, { 
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+  .then(response => response.json())
+  .then(response => (response as unknown) as Condominium)
+
+export type Update = Create;
 
 export const update = (condominiumId: number, data: Update) => 
   fetch(`${API_URL}/condominiums/${condominiumId}`, { 

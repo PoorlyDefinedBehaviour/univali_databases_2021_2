@@ -5,6 +5,7 @@ import { BrowserRouter, Switch, Route} from "react-router-dom"
 import { Condominiums } from './pages/condominiums/list';
 import { Home } from './pages/home';
 import { QueryClient, QueryClientProvider } from "react-query"
+import { CreateCondominium } from './pages/condominiums/create';
 
 const queryClient = new QueryClient()
 
@@ -14,6 +15,7 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route exact path="/"><Home /></Route>
+          <Route path="/condominiums/create"><CreateCondominium /></Route>
           <Route path="/condominiums"><Condominiums /></Route>
           {/* <Route path="/employees" element={<Employees />} /> */}
         </Switch>
