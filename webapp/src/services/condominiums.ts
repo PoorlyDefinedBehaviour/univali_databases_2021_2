@@ -14,7 +14,7 @@ export interface City {
 export interface Address {
   id: number 
   street: string 
-  number: number 
+  number: string 
   city: City
 }
 
@@ -32,3 +32,24 @@ export const getAll = () =>
 
 export const deleteById = (condominiumId: number) => 
   fetch(`${API_URL}/condominiums/${condominiumId}`, { method: "DELETE"})
+
+export interface Update {
+  name: string 
+  cnpj: string 
+  address: {
+    street: string 
+    number: string
+    city_id: number
+  }
+}
+
+export const update = (condominiumId: number, data: Update) => 
+  fetch(`${API_URL}/condominiums/${condominiumId}`, { 
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+  .then(response => response.json())
+  .then(response => (response as unknown) as Condominium)

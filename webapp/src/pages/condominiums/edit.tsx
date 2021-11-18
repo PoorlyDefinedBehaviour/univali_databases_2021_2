@@ -1,14 +1,14 @@
 import { useState } from "react"
 import { useQuery } from "react-query"
-
+import { useHistory } from "react-router-dom"
 import { getAll } from "../../services/cities"
-import { Condominium } from "../../services/condominiums"
+import { Condominium, update } from "../../services/condominiums"
 
 interface Form {
   name: string 
   cnpj: string 
   street: string 
-  number: number
+  number: string
   cityId: number
 }
 
@@ -18,6 +18,7 @@ interface Props {
 
 export const EditCondominium = ({ condominium }: Props) => {
   const { isLoading, data: cities } = useQuery("get_all_cities", getAll)
+
   const [form, setForm] = useState<Form>({
     name: condominium.name,
     cnpj: condominium.cnpj,
@@ -25,6 +26,9 @@ export const EditCondominium = ({ condominium }: Props) => {
     number: condominium.address.number,
     cityId: condominium.address.city.id
   })
+
+
+  const history = useHistory()
 
   if(isLoading) {
     return <p>...</p>
@@ -39,7 +43,17 @@ export const EditCondominium = ({ condominium }: Props) => {
 
   const handleSubmit = (event: any) => {
     event.preventDefault()
-    console.log("form",form)
+    
+    update(condominium.id, {
+      name: form.name,
+      cnpj: form.cnpj,
+      address: {
+        city_id: form.cityId,
+        street: form.street, 
+        number: form.number,
+      }
+    })
+    .then(() => history.push("/"))
   }
   
   return (
