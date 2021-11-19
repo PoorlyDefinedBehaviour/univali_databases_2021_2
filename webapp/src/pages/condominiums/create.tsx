@@ -49,7 +49,14 @@ export const CreateCondominium = () => {
         number: form.number,
       }
     })
-    .then(() => history.push("/"))
+    .then((response: any) => {
+      if(response.message){
+        alert(response.message)
+        return 
+      } 
+      
+      history.push("/")
+    })
   }
   
   return (
