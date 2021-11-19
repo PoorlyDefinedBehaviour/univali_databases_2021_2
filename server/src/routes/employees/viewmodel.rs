@@ -132,3 +132,18 @@ impl From<employees::Shift> for Shift {
     }
   }
 }
+
+#[derive(Serialize, Deserialize)]
+pub struct Role {
+  pub id: i32,
+  pub name: String,
+}
+
+impl From<employees::Role> for Role {
+  fn from(item: employees::Role) -> Self {
+    Self {
+      id: item.id,
+      name: item.name,
+    }
+  }
+}

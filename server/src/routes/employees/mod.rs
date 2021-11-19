@@ -11,7 +11,8 @@ pub fn init(config: &mut web::ServiceConfig) {
     .service(create)
     .service(update)
     .service(delete)
-    .service(get_all_shifts);
+    .service(get_all_shifts)
+    .service(get_all_roles);
 }
 
 #[get("/employees")]
@@ -93,6 +94,24 @@ async fn get_all_shifts(db: web::Data<contract::Database>) -> impl Responder {
       let view = shifts
         .into_iter()
         .map(viewmodel::Shift::from)
+        .collect::<Vec<_>>();
+
+      HttpResponse::Ok().json(view)
+    }
+  }
+}
+
+#[get("/employees/roles")]
+async fn get_all_roles(db: web::Data<contract::Database>) -> impl Responder {
+  match employees::get_all_roles(db.get_ref()).await {
+    Err(err) => {
+      error!("{}", err);
+      HttpResponse::ServiceUnavailable().finish()
+    }
+    Ok(roles) => {
+      let view = roles
+        .into_iter()
+        .map(viewmodel::Role::from)
         .collect::<Vec<_>>();
 
       HttpResponse::Ok().json(view)
