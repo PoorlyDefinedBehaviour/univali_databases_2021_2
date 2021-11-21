@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { useState } from "react"
 import { useQuery } from "react-query"
 import { useHistory } from "react-router-dom"
@@ -22,6 +23,17 @@ export const CreateCondominium = () => {
     number: "",
     cityId: -1,
   })
+
+  useEffect(() => {
+    if(!cities){
+      return
+    }
+
+    setForm(form => ({
+      ...form,
+      cityId: cities[0].id
+    }))
+  }, [cities])
 
 
   const history = useHistory()
