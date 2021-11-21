@@ -63,9 +63,9 @@ export const EditEmployee = ({ employee }: Props) => {
       name: form.name,
       cpf: form.cpf,
       wage_in_cents: form.wageInCents * 100,
-      works_at_condominium_id: form.condominiumId, 
-      role_id: form.roleId,
-      shift_id: form.shiftId,
+      works_at_condominium_id: Number(form.condominiumId), 
+      role_id: Number(form.roleId),
+      shift_id: Number(form.shiftId),
       address: {
         city_id: Number(form.cityId),
         street: form.street, 
@@ -137,7 +137,7 @@ export const EditEmployee = ({ employee }: Props) => {
         Condomínio
       </label>
       <div className="relative">
-        <select name="condominiumId" value={form.cityId} className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-condominiums">
+        <select name="condominiumId" value={form.condominiumId} className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-condominiums">
           {condominiums?.map(condominium => <option key={condominium.id} value={condominium.id}>{ condominium.name }</option>)}
         </select>
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -150,7 +150,7 @@ export const EditEmployee = ({ employee }: Props) => {
         Turno
       </label>
       <div className="relative">
-        <select name="shiftId" value={form.cityId} className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-shifts">
+        <select name="shiftId" value={form.shiftId} className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-shifts">
           {shifts?.map(shift => <option key={shift.id} value={shift.id}>{ shift.name }</option>)}
         </select>
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -163,7 +163,7 @@ export const EditEmployee = ({ employee }: Props) => {
         Cargo
       </label>
       <div className="relative">
-        <select name="roleId" value={form.cityId} className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-roles">
+        <select name="roleId" value={form.roleId} className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-roles">
           {roles?.map(role => <option key={role.id} value={role.id}>{ role.name }</option>)}
         </select>
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
