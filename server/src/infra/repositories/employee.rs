@@ -7,7 +7,7 @@ use sqlx::{
   Pool, Row,
 };
 
-use crate::domain::{cities, contract, employees, value_objects::cpf::Cpf};
+use crate::domain::{cities, condominiums, contract, employees, value_objects::cpf::Cpf};
 
 pub(super) struct EmployeeRepository {
   pub pool: Pool<MySql>,
@@ -39,6 +39,24 @@ fn row_to_employee(row: MySqlRow) -> Result<employees::Employee, sqlx::Error> {
         state: cities::State {
           id: row.try_get("state_id")?,
           name: row.try_get("state_name")?,
+        },
+      },
+    },
+    works_at_condominium: condominiums::Condominium {
+      id: row.try_get("condominium_id")?,
+      name: row.try_get("condominium_name")?,
+      cnpj: row.try_get("condominium_cnpj")?,
+      address: condominiums::Address {
+        id: row.try_get("condominium_address_id")?,
+        street: row.try_get("condominium_address_street")?,
+        number: row.try_get("condominium_address_number")?,
+        city: cities::City {
+          id: row.try_get("condominium_city_id")?,
+          name: row.try_get("condominium_city_name")?,
+          state: cities::State {
+            id: row.try_get("condominium_state_id")?,
+            name: row.try_get("condominium_state_name")?,
+          },
         },
       },
     },
@@ -78,7 +96,17 @@ impl EmployeeRepository {
         tab_city.id as city_id,
         tab_city.name as city_name,
         tab_state.id as state_id,
-        tab_state.name as state_name
+        tab_state.name as state_name,
+        tab_condominium.id as condominium_id,
+        tab_condominium.name as condominium_name,
+        tab_condominium.cnpj as condominium_cnpj,
+        tab_condominium_address.id as condominium_address_id,
+        tab_condominium_address.street as condominium_address_street,
+        tab_condominium_address.number as condominium_address_number,
+        tab_condominium_city.id as condominium_city_id,
+        tab_condominium_city.name as condominium_city_name,
+        tab_condominium_state.id as condominium_state_id,
+        tab_condominium_state.name as condominium_state_name
       FROM tab_employee
       INNER JOIN tab_shift
       ON tab_shift.id = tab_employee.shift_id
@@ -90,6 +118,14 @@ impl EmployeeRepository {
       ON tab_city.id = tab_address.city_id
       INNER JOIN tab_state
       ON tab_state.id = tab_city.state_id
+      INNER JOIN tab_condominium
+      ON tab_condominium.id = tab_employee.works_at_condominium_id
+      INNER JOIN tab_address tab_condominium_address
+      ON tab_condominium_address.id = tab_condominium.id
+      INNER JOIN tab_city tab_condominium_city
+      ON tab_condominium_city.id = tab_condominium_address.id
+      INNER JOIN tab_state tab_condominium_state
+      ON tab_condominium_state.id = tab_condominium_city.id
       WHERE tab_employee.id = ?
       ",
     )
@@ -124,7 +160,17 @@ impl contract::EmployeeRepository for EmployeeRepository {
         tab_city.id as city_id,
         tab_city.name as city_name,
         tab_state.id as state_id,
-        tab_state.name as state_name
+        tab_state.name as state_name,
+        tab_condominium.id as condominium_id,
+        tab_condominium.name as condominium_name,
+        tab_condominium.cnpj as condominium_cnpj,
+        tab_condominium_address.id as condominium_address_id,
+        tab_condominium_address.street as condominium_address_street,
+        tab_condominium_address.number as condominium_address_number,
+        tab_condominium_city.id as condominium_city_id,
+        tab_condominium_city.name as condominium_city_name,
+        tab_condominium_state.id as condominium_state_id,
+        tab_condominium_state.name as condominium_state_name
       FROM tab_employee
       INNER JOIN tab_shift
       ON tab_shift.id = tab_employee.shift_id
@@ -136,6 +182,14 @@ impl contract::EmployeeRepository for EmployeeRepository {
       ON tab_city.id = tab_address.city_id
       INNER JOIN tab_state
       ON tab_state.id = tab_city.state_id
+      INNER JOIN tab_condominium
+      ON tab_condominium.id = tab_employee.works_at_condominium_id
+      INNER JOIN tab_address tab_condominium_address
+      ON tab_condominium_address.id = tab_condominium.id
+      INNER JOIN tab_city tab_condominium_city
+      ON tab_condominium_city.id = tab_condominium_address.id
+      INNER JOIN tab_state tab_condominium_state
+      ON tab_condominium_state.id = tab_condominium_city.id
       ORDER BY tab_employee.created_at DESC
     ",
     )

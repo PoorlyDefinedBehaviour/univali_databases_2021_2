@@ -3,7 +3,10 @@ use std::convert::{TryFrom, TryInto};
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
-use crate::domain::{employees, value_objects, value_objects::cpf::Cpf};
+use crate::{
+  domain::{employees, value_objects, value_objects::cpf::Cpf},
+  routes::condominiums,
+};
 
 #[derive(Serialize, Deserialize)]
 pub struct ValidationError {
@@ -88,6 +91,7 @@ pub struct Employee {
   pub shift: Shift,
   pub role: Role,
   pub address: Address,
+  pub works_at_condominium: condominiums::viewmodel::Condominium,
 }
 
 impl From<employees::Employee> for Employee {
@@ -99,6 +103,7 @@ impl From<employees::Employee> for Employee {
       wage_in_cents: item.wage_in_cents,
       shift: item.shift.into(),
       role: item.role.into(),
+      works_at_condominium: item.works_at_condominium.into(),
       address: Address {
         id: item.address.id,
         street: item.address.street,

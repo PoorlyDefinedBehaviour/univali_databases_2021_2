@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-use super::{cities::City, contract, value_objects::cpf::Cpf};
+use super::{cities::City, condominiums::Condominium, contract, value_objects::cpf::Cpf};
 pub mod dto;
 
 pub struct Address {
@@ -28,6 +28,7 @@ pub struct Employee {
   pub shift: Shift,
   pub role: Role,
   pub address: Address,
+  pub works_at_condominium: Condominium,
 }
 
 pub async fn get_all(db: &contract::Database) -> Result<Vec<Employee>> {

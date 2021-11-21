@@ -1,4 +1,4 @@
-mod viewmodel;
+pub mod viewmodel;
 use actix_web::{delete, get, patch, post, web, HttpResponse, Responder};
 
 use crate::domain::{condominiums, contract};
@@ -76,4 +76,3 @@ async fn delete(db: web::Data<contract::Database>, path_params: web::Path<i32>) 
     Ok(()) => HttpResponse::Ok(),
   }
 }
-
