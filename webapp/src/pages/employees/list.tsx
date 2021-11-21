@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useQuery } from "react-query"
 import { useHistory } from "react-router-dom"
 import { deleteById, Employee, getAll } from "../../services/employees"
+import { EditEmployee } from "./edit"
 
 
 type Props = {
@@ -14,7 +15,7 @@ const Card = ({ data, onEdit, onDelete}: Props) => (
   <div className="max-w-md py-4 px-8 bg-white shadow-lg rounded-lg my-20">
     <div>
       <h2 className="text-gray-800 text-3xl font-semibold">{data.name}</h2>
-      <h2 className="text-gray-800 text-2xl font-semibold">{data.role} - {data.shift}</h2>
+      <p className="mt-2 text-gray-600">{data.role.name}({data.shift.name}) no condomínio {data.works_at_condominium.name}</p>
       <p className="mt-2 text-gray-600">Rua {data.address.street}, {data.address.city.name}, {data.address.city.state.name}</p>
     </div>
     <div className="flex justify-end mt-4">
@@ -50,7 +51,7 @@ export const Employees = () => {
   }
 
   if(editing !== null) {
-    // return <Editemployee employee={editing}/>
+    return <EditEmployee employee={editing}/>
   }
 
   const handleDelete = (employeeId: number) => {
