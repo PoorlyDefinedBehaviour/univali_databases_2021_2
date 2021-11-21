@@ -121,11 +121,11 @@ impl EmployeeRepository {
       INNER JOIN tab_condominium
       ON tab_condominium.id = tab_employee.works_at_condominium_id
       INNER JOIN tab_address tab_condominium_address
-      ON tab_condominium_address.id = tab_condominium.id
+      ON tab_condominium_address.id = tab_condominium.address_id
       INNER JOIN tab_city tab_condominium_city
-      ON tab_condominium_city.id = tab_condominium_address.id
+      ON tab_condominium_city.id = tab_condominium_address.city_id
       INNER JOIN tab_state tab_condominium_state
-      ON tab_condominium_state.id = tab_condominium_city.id
+      ON tab_condominium_state.id = tab_condominium_city.state_id
       WHERE tab_employee.id = ?
       ",
     )
@@ -185,11 +185,11 @@ impl contract::EmployeeRepository for EmployeeRepository {
       INNER JOIN tab_condominium
       ON tab_condominium.id = tab_employee.works_at_condominium_id
       INNER JOIN tab_address tab_condominium_address
-      ON tab_condominium_address.id = tab_condominium.id
+      ON tab_condominium_address.id = tab_condominium.address_id
       INNER JOIN tab_city tab_condominium_city
-      ON tab_condominium_city.id = tab_condominium_address.id
+      ON tab_condominium_city.id = tab_condominium_address.city_id
       INNER JOIN tab_state tab_condominium_state
-      ON tab_condominium_state.id = tab_condominium_city.id
+      ON tab_condominium_state.id = tab_condominium_city.state_id
       ORDER BY tab_employee.created_at DESC
     ",
     )

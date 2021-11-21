@@ -3,6 +3,7 @@ use anyhow::Result;
 use super::{cities::City, condominiums::Condominium, contract, value_objects::cpf::Cpf};
 pub mod dto;
 
+#[derive(Debug)]
 pub struct Address {
   pub id: i32,
   pub street: String,
@@ -10,16 +11,19 @@ pub struct Address {
   pub city: City,
 }
 
+#[derive(Debug)]
 pub struct Shift {
   pub id: i32,
   pub name: String,
 }
 
+#[derive(Debug)]
 pub struct Role {
   pub id: i32,
   pub name: String,
 }
 
+#[derive(Debug)]
 pub struct Employee {
   pub id: i32,
   pub name: String,
