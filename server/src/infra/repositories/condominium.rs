@@ -1,7 +1,10 @@
+use std::convert::TryFrom;
+
 use crate::domain::{
   cities::{City, State},
   condominiums::{self, Address, Condominium},
   contract,
+  value_objects::cnpj::Cnpj,
 };
 use anyhow::Result;
 use async_trait::async_trait;
@@ -15,10 +18,12 @@ pub(super) struct CondominiumRepository {
 }
 
 fn row_to_condominium(row: MySqlRow) -> Result<Condominium, sqlx::Error> {
+  let cnpj: String = row.try_get("condominium_cnpj")?;
+
   Ok(Condominium {
     id: row.try_get("condominium_id")?,
     name: row.try_get("condominium_name")?,
-    cnpj: row.try_get("condominium_cnpj")?,
+    cnpj: Cnpj::try_from(cnpj).unwrap(),
     address: Address {
       id: row.try_get("address_id")?,
       street: row.try_get("address_street")?,
@@ -126,7 +131,7 @@ impl contract::CondominiumRepository for CondominiumRepository {
       VALUES (?, ?, ?)
       "#,
       data.name,
-      data.cnpj,
+      data.cnpj.into_inner(),
       insert_address_result.last_insert_id(),
     )
     .execute(&mut tx)
@@ -177,7 +182,7 @@ impl contract::CondominiumRepository for CondominiumRepository {
       WHERE id = ?
       "#,
       data.name,
-      data.cnpj,
+      data.cnpj.into_inner(),
       condominium_id
     )
     .execute(&mut tx)

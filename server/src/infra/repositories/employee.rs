@@ -7,7 +7,10 @@ use sqlx::{
   Pool, Row,
 };
 
-use crate::domain::{cities, condominiums, contract, employees, value_objects::cpf::Cpf};
+use crate::domain::{
+  cities, condominiums, contract, employees,
+  value_objects::{cnpj::Cnpj, cpf::Cpf},
+};
 
 pub(super) struct EmployeeRepository {
   pub pool: Pool<MySql>,
@@ -15,6 +18,7 @@ pub(super) struct EmployeeRepository {
 
 fn row_to_employee(row: MySqlRow) -> Result<employees::Employee, sqlx::Error> {
   let cpf: String = row.try_get("employee_cpf")?;
+  let cnpj: String = row.try_get("condominium_cnpj")?;
 
   Ok(employees::Employee {
     id: row.try_get("employee_id")?,
@@ -45,7 +49,7 @@ fn row_to_employee(row: MySqlRow) -> Result<employees::Employee, sqlx::Error> {
     works_at_condominium: condominiums::Condominium {
       id: row.try_get("condominium_id")?,
       name: row.try_get("condominium_name")?,
-      cnpj: row.try_get("condominium_cnpj")?,
+      cnpj: Cnpj::try_from(cnpj).unwrap(),
       address: condominiums::Address {
         id: row.try_get("condominium_address_id")?,
         street: row.try_get("condominium_address_street")?,

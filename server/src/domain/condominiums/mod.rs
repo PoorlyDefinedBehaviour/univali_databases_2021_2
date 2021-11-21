@@ -2,7 +2,7 @@ pub mod dto;
 
 use anyhow::Result;
 
-use super::{cities::City, contract};
+use super::{cities::City, contract, value_objects::cnpj::Cnpj};
 
 #[derive(Debug)]
 pub struct Address {
@@ -16,8 +16,7 @@ pub struct Address {
 pub struct Condominium {
   pub id: i32,
   pub name: String,
-  // TODO: make cnpj a value object and validate it
-  pub cnpj: String,
+  pub cnpj: Cnpj,
   pub address: Address,
 }
 

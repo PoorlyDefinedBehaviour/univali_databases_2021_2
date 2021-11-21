@@ -1,7 +1,6 @@
-pub mod cnpj;
-pub mod cpf;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, PartialEq)]
+#[derive(Serialize, Deserialize)]
 pub struct ValidationError {
   pub field: &'static str,
   pub message: String,

@@ -1,3 +1,5 @@
+use crate::domain::value_objects::cnpj::Cnpj;
+
 pub struct Address {
   pub street: String,
   pub number: String,
@@ -6,7 +8,7 @@ pub struct Address {
 
 pub struct Create {
   pub name: String,
-  pub cnpj: String,
+  pub cnpj: Cnpj,
   pub address: Address,
 }
 

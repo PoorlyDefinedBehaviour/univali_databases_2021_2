@@ -1,5 +1,6 @@
 use std::convert::{TryFrom, TryInto};
 
+pub use crate::routes::viewmodel::ValidationError;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
@@ -7,12 +8,6 @@ use crate::{
   domain::{employees, value_objects, value_objects::cpf::Cpf},
   routes::condominiums,
 };
-
-#[derive(Serialize, Deserialize)]
-pub struct ValidationError {
-  pub field: &'static str,
-  pub message: String,
-}
 
 impl From<value_objects::ValidationError> for ValidationError {
   fn from(item: value_objects::ValidationError) -> Self {

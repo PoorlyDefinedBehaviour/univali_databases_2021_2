@@ -1,6 +1,10 @@
-use crate::domain::condominiums;
+use crate::domain::{
+  condominiums,
+  value_objects::{self, cnpj::Cnpj},
+};
+pub use crate::routes::viewmodel::ValidationError;
 use serde::{Deserialize, Serialize};
-use std::convert::{From, Into};
+use std::convert::{From, TryFrom, TryInto};
 
 #[derive(Deserialize, Serialize)]
 pub struct State {
@@ -36,7 +40,7 @@ impl From<condominiums::Condominium> for Condominium {
     Condominium {
       id: item.id,
       name: item.name,
-      cnpj: item.cnpj,
+      cnpj: item.cnpj.into_inner(),
       address: Address {
         id: item.address.id,
         street: item.address.street,
@@ -68,17 +72,19 @@ pub struct Create {
   pub address: CreateCondominiumAddress,
 }
 
-impl Into<condominiums::dto::Create> for Create {
-  fn into(self) -> condominiums::dto::Create {
-    condominiums::dto::Create {
+impl TryInto<condominiums::dto::Create> for Create {
+  type Error = value_objects::ValidationError;
+
+  fn try_into(self) -> Result<condominiums::dto::Create, Self::Error> {
+    Ok(condominiums::dto::Create {
       name: self.name,
-      cnpj: self.cnpj,
+      cnpj: Cnpj::try_from(self.cnpj)?,
       address: condominiums::dto::Address {
         street: self.address.street,
         number: self.address.number,
         city_id: self.address.city_id,
       },
-    }
+    })
   }
 }
 

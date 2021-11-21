@@ -1,4 +1,6 @@
 pub mod viewmodel;
+use std::convert::TryInto;
+
 use actix_web::{delete, get, patch, post, web, HttpResponse, Responder};
 
 use crate::domain::{condominiums, contract};
@@ -38,12 +40,17 @@ async fn create(
 ) -> impl Responder {
   let db = db.get_ref();
 
-  match condominiums::create(db, data.into_inner().into()).await {
-    Err(err) => {
-      error!("{}", err);
-      HttpResponse::ServiceUnavailable().finish()
+  match data.into_inner().try_into() {
+    Err(validation_error) => {
+      HttpResponse::BadRequest().json(viewmodel::ValidationError::from(validation_error))
     }
-    Ok(condominium) => HttpResponse::Ok().json(viewmodel::Condominium::from(condominium)),
+    Ok(data) => match condominiums::create(db, data).await {
+      Err(err) => {
+        error!("{}", err);
+        HttpResponse::ServiceUnavailable().finish()
+      }
+      Ok(condominium) => HttpResponse::Ok().json(viewmodel::Condominium::from(condominium)),
+    },
   }
 }
 
@@ -53,14 +60,17 @@ async fn update(
   path_params: web::Path<i32>,
   data: web::Json<viewmodel::Update>,
 ) -> impl Responder {
-  let db = db.get_ref();
-
-  match condominiums::update(db, path_params.into_inner(), data.into_inner().into()).await {
-    Err(err) => {
-      error!("{}", err);
-      HttpResponse::ServiceUnavailable().finish()
+  match data.into_inner().try_into() {
+    Err(validation_error) => {
+      HttpResponse::BadRequest().json(viewmodel::ValidationError::from(validation_error))
     }
-    Ok(condominium) => HttpResponse::Ok().json(viewmodel::Condominium::from(condominium)),
+    Ok(data) => match condominiums::update(db.get_ref(), path_params.into_inner(), data).await {
+      Err(err) => {
+        error!("{}", err);
+        HttpResponse::ServiceUnavailable().finish()
+      }
+      Ok(condominium) => HttpResponse::Ok().json(viewmodel::Condominium::from(condominium)),
+    },
   }
 }
 
