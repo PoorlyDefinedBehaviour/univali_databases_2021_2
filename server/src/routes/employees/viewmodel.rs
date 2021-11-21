@@ -85,8 +85,8 @@ pub struct Employee {
   pub name: String,
   pub cpf: String,
   pub wage_in_cents: i32,
-  pub shift: String,
-  pub role: String,
+  pub shift: Shift,
+  pub role: Role,
   pub address: Address,
 }
 
@@ -97,8 +97,8 @@ impl From<employees::Employee> for Employee {
       name: item.name,
       cpf: item.cpf.into_inner(),
       wage_in_cents: item.wage_in_cents,
-      shift: item.shift.name,
-      role: item.role.name,
+      shift: item.shift.into(),
+      role: item.role.into(),
       address: Address {
         id: item.address.id,
         street: item.address.street,
