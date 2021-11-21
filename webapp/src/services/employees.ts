@@ -1,12 +1,24 @@
+import { Condominium } from "./condominiums";
 import { API_URL } from "./constants";
+
+export interface Role {
+  id: number 
+  name: string
+}
+
+export interface Shift {
+  id: number 
+  name: string
+}
 
 export interface Employee {
   id: number 
   name: string 
   cpf: string 
   wage_in_cents: number 
-  shift: string 
-  role: string 
+  role: Role
+  shift: Shift 
+  works_at_condominium: Condominium
   address: {
     id: number 
     street: string 
@@ -28,7 +40,7 @@ export const getAll = () =>
   .then(response => (response as unknown) as Employee[])
 
 export const deleteById = (employeeId: number) => 
-  fetch(`${API_URL}/employee/${employeeId}`, { method: "DELETE"})
+  fetch(`${API_URL}/employees/${employeeId}`, { method: "DELETE"})
 
 export interface Create {
   name: string 
@@ -58,7 +70,7 @@ export const create = (data: Create) =>
 export type Update = Create;
 
 export const update = (employeeId: number, data: Update) => 
-  fetch(`${API_URL}/employee/${employeeId}`, { 
+  fetch(`${API_URL}/employees/${employeeId}`, { 
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
